@@ -33,7 +33,10 @@ javac *.java
 		System.out.println(tree.toStringTree(parser));
 ```
 
-### Git
+### Symbol table
+#### 1. Data structure
+#### 2. Symbol binder
+#### 3. Typing check
 
 
 

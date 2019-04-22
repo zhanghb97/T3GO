@@ -1,14 +1,19 @@
 package main;
 
 import java.io.IOException;
+import java.util.Map;
 
 import org.antlr.v4.runtime.CharStream;
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
+import org.antlr.v4.runtime.tree.ParseTreeVisitor;
 
+import AST.astGen;
+import antlr.t3parserBaseVisitor;
 import antlr.t3parserLexer;
 import antlr.t3parserParser;
 import antlr.t3parserParser.Ttcn3moduleContext;
+import antlr.t3parserVisitor;
 
 public class T3GO {
 
@@ -23,8 +28,12 @@ public class T3GO {
 		t3parserParser parser = new t3parserParser(tokens);
 		//针对ttcn3module规则开始语法分析
 		Ttcn3moduleContext tree = parser.ttcn3module();
-		//打印树形表示
-		System.out.println(tree.toStringTree(parser));
+		t3parserVisitor loader = new astGen();
+		loader.visit(tree);
+		System.out.println("finish!");
+		
+		
+		
 
 	}
 
