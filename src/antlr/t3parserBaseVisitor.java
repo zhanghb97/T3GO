@@ -2202,4 +2202,11 @@ public class t3parserBaseVisitor<T> extends AbstractParseTreeVisitor<T> implemen
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
 	@Override public T visitOctStringMatch(t3parserParser.OctStringMatchContext ctx) { return visitChildren(ctx); }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation returns the result of calling
+	 * {@link #visitChildren} on {@code ctx}.</p>
+	 */
+	@Override public T visitIntegervalue(t3parserParser.IntegervalueContext ctx) { return visitChildren(ctx); }
 }

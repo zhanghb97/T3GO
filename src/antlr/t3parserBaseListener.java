@@ -1,7 +1,6 @@
 package antlr;
 // Generated from t3parser.g4 by ANTLR 4.7.1
 
-
 import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.tree.ErrorNode;
 import org.antlr.v4.runtime.tree.TerminalNode;
@@ -3768,6 +3767,18 @@ public class t3parserBaseListener implements t3parserListener {
 	 * <p>The default implementation does nothing.</p>
 	 */
 	@Override public void exitOctStringMatch(t3parserParser.OctStringMatchContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterIntegervalue(t3parserParser.IntegervalueContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitIntegervalue(t3parserParser.IntegervalueContext ctx) { }
 
 	/**
 	 * {@inheritDoc}

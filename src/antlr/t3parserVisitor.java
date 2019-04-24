@@ -1888,4 +1888,10 @@ public interface t3parserVisitor<T> extends ParseTreeVisitor<T> {
 	 * @return the visitor result
 	 */
 	T visitOctStringMatch(t3parserParser.OctStringMatchContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link t3parserParser#integervalue}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitIntegervalue(t3parserParser.IntegervalueContext ctx);
 }

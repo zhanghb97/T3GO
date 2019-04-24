@@ -3137,4 +3137,14 @@ public interface t3parserListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitOctStringMatch(t3parserParser.OctStringMatchContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link t3parserParser#integervalue}.
+	 * @param ctx the parse tree
+	 */
+	void enterIntegervalue(t3parserParser.IntegervalueContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link t3parserParser#integervalue}.
+	 * @param ctx the parse tree
+	 */
+	void exitIntegervalue(t3parserParser.IntegervalueContext ctx);
 }

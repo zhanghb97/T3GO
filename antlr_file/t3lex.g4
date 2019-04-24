@@ -250,10 +250,12 @@ ZERO_NUM 		: 	'0'   ;
 fragment
 NON_ZERO_NUM	: 	[1-9] ;
 
-
+fragment
 NUM 			: 	ZERO_NUM | NON_ZERO_NUM ;
 
-NUMBER 			: 	MINUS? ((NON_ZERO_NUM NUM*) | ZERO_NUM) ;
+//zhb修改
+//NUMBER 			: 	MINUS? ((NON_ZERO_NUM NUM*) | ZERO_NUM) ;
+NUMBER      :   ((NON_ZERO_NUM NUM*) | ZERO_NUM) ;
 
 DECIMAL_NUM 	: NUM+ ;
 
@@ -268,10 +270,16 @@ FLOATVALUE
 BSTRING 		: SINGLE_QUATATION (BIN | BINSPACE)* SINGLE_QUATATION 'B' ;
 BIN 			: ZERO_NUM | '1' ;
 
-OSTRING 		: SINGLE_QUATATION (OCT | BINSPACE)* SINGLE_QUATATION 'O' ;
-HEX 			: NUM|[a-fA-F] ;
+//zhb修改
+//OSTRING 		: SINGLE_QUATATION (OCT | BINSPACE)* SINGLE_QUATATION 'O' ;
+OSTRING     : SINGLE_QUATATION ([0-7] | BINSPACE)* SINGLE_QUATATION 'O' ;
 
-HSTRING 		: SINGLE_QUATATION (HEX | BINSPACE)* SINGLE_QUATATION 'H' ;
+//zhb修改十六进制表示方法
+HEX 			: '0x' (NUM|[a-fA-F])* ;
+
+//zhb修改
+//HSTRING 		: SINGLE_QUATATION (HEX | BINSPACE)* SINGLE_QUATATION 'H' ;
+HSTRING     : SINGLE_QUATATION (NUM| [a-fA-F] | BINSPACE)* SINGLE_QUATATION 'H' ;
 
 //CSTRING 		: QUOTATION Char* QUOTATION ;
 
@@ -292,7 +300,8 @@ fragment
 NaN 			: 'not_a_number' ;
 
 
-INTEGERVALUE    : MINUS? NUMBER ;
+//INTEGERVALUE    : MINUS? NUMBER ;
+
 
 // needed to modify with predefined value
 // 为了避免值与match冲突，将match转到语法分析中
@@ -342,13 +351,15 @@ ESC_F 			: '\\f' ;
 
 
 CSTRING
-    :  '"' ( EscapeSequence | ~('\\'|'"') )* '"'
+//    :  '"' ( EscapeSequence | ~('\\'|'"') )*? '"'
+    :  '"' .*? '"'
     ;
 
 //FreeText
 //	: QUOTATION ExtendedAlpha* QUOTATION
 //	;
 
+/*
 Char
   	:  '\u0024' |
     	'\u002d' |
@@ -365,6 +376,8 @@ Char
        '\u4e00'..'\u9fff' |
        '\uf900'..'\ufaff'
     ;
+*/
+
 
 fragment
 EscapeSequence

@@ -20,9 +20,11 @@ moduleId
 	: IDENTIFIER languageSpec?
 	;
 
-// 3 FreeText to freetext by zhb
+// 3 
+//zhb修改，添加| LANGUAGE CSTRING (COMMA CSTRING)*
 languageSpec
-	: LANGUAGE freeText (COMMA freeText)*
+	: LANGUAGE FreeText (COMMA FreeText)*
+	| LANGUAGE CSTRING (COMMA CSTRING)*
 	;
 
 // 4 module definitions
@@ -194,7 +196,7 @@ enumeration
 
 // 31
 integerValueOrRange
-	: INTEGERVALUE (TWODOT INTEGERVALUE)?
+	: integervalue (TWODOT integervalue)?
 	;
 
 // 32
@@ -699,10 +701,11 @@ mtcSpec
 	;
 
 // 111
-//zhb 修改
+// zhb 修改
 statementBlock
 //	: LEFT_BRACE functionDefList? functionStatementList? RIGHT_BRACE 
-	: LEFT_BRACE (functionDefList| functionStatementList)+ RIGHT_BRACE 
+	: LEFT_BRACE (functionDefList| functionStatementList)*
+	 RIGHT_BRACE 
 	;
 
 // 112
@@ -944,7 +947,9 @@ varList
 	;
 
 // 147
+//zhb 添加(LEFT_PARENT functionInstance RIGHT_PARENT)?
 singleVarInstance 
+//	: IDENTIFIER arrayDef? (ASSIGNMENTCHAR expression (LEFT_PARENT functionInstance RIGHT_PARENT)?)? 
 	: IDENTIFIER arrayDef? (ASSIGNMENTCHAR expression)? 
 	;
 
@@ -1373,8 +1378,10 @@ typeReference
 	;
 
 // 227
+//zhb修改，: (LEFT_BRACKET singleExpression (TWODOT singleExpression)? RIGHT_BRACKET)+  大括号改为中括号
 arrayDef
-	: (LEFT_BRACE singleExpression (TWODOT singleExpression)? RIGHT_BRACE)+
+//	: (LEFT_BRACE singleExpression (TWODOT singleExpression)? RIGHT_BRACE)+
+	: (LEFT_BRACKET singleExpression (TWODOT singleExpression)? RIGHT_BRACKET)+
 	;
 
 // 228 value
@@ -1419,7 +1426,7 @@ quadruple
 
 // 233
 referencedValue
-	: extendedIdentifier (extendedFieldReference | LEFT_PARENT INTEGERVALUE RIGHT_PARENT)?
+	: extendedIdentifier (extendedFieldReference | LEFT_PARENT integervalue RIGHT_PARENT)?
 	;
 
 // parameterization
@@ -1440,8 +1447,9 @@ formalTimerPar
 	;
 
 // 237
+//zhb 修改
 formalTemplatePar
-	: (IN | OUT | INOUT)? (TEMPLATE | restrictedTemplate) (AT_LAZY | AT_FUZZY)?
+	: (IN | OUT | INOUT)? (TEMPLATE | restrictedTemplate) (AT_LAZY | AT_FUZZY)? type IDENTIFIER arrayDef? (ASSIGNMENTCHAR (templateInstance | MINUS))?
 	;
 
 // 238
@@ -1550,8 +1558,9 @@ sutStatements
 	;
 
 // 254
+//zhb修改
 altGuardList
-	: (guardStatement | LEFT_BRACKET ELSE RIGHT_BRACKET statementBlock SEMICOLON?)*
+	: ((guardStatement | LEFT_BRACKET ELSE RIGHT_BRACKET statementBlock) SEMICOLON?)*
 	;
 
 // 255
@@ -1616,7 +1625,6 @@ fieldExpressionList
 	;
 
 // 264
-//zhb 添加(LEFT_PARENT functionInstance RIGHT_PARENT)?
 fieldExpressionSpec
 	: fieldReference ASSIGNMENTCHAR notUsedOrExpression
 	;
@@ -1867,8 +1875,10 @@ selectCaseConstruct
 	;
 
 // 307
+//zhb修改，改为selectCase*
 selectCaseBody
-	: LEFT_BRACE selectCase+ caseElse? RIGHT_BRACE
+//	: LEFT_BRACE selectCase+ caseElse? RIGHT_BRACE
+	: LEFT_BRACE selectCase* caseElse? RIGHT_BRACE
 	;
 
 // 308
@@ -1948,11 +1958,17 @@ bitStringMatch
 
 hexStringMatch 	
 	: HSTRING
-	| SINGLE_QUATATION (HEX | QUESTION | STAR)* SINGLE_QUATATION 'H' 
+//	| SINGLE_QUATATION (HEX | QUESTION | STAR)* SINGLE_QUATATION 'H'
+//	| SINGLE_QUATATION (IDENTIFIER | QUESTION | STAR)* SINGLE_QUATATION 'H' 
 	;
 
 
 octStringMatch 	
 	: OSTRING
-	| SINGLE_QUATATION ((HEX HEX)| QUESTION | STAR) SINGLE_QUATATION 'O' 
+//	| SINGLE_QUATATION ((HEX HEX)| QUESTION | STAR) SINGLE_QUATATION 'O'
+//	| SINGLE_QUATATION ((IDENTIFIER IDENTIFIER)| QUESTION | STAR) SINGLE_QUATATION 'O' 
 	;
+
+integervalue    : MINUS? NUMBER ;
+
+

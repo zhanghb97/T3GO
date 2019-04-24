@@ -1,0 +1,22 @@
+module test001
+{
+	const integer const_int1 := 10;
+	function func_testfunc1() 
+	{
+		var integer an := 1;
+
+		if(an == 1)
+		{
+			setverdict(pass);
+		}
+		else if (const_int1 == 10)
+		{
+			setverdict(fail);
+		}
+	}
+
+	control
+	{
+		execute(tc_001());
+	}
+}
