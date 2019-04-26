@@ -2,6 +2,9 @@ package antlr;
 // Generated from t3parser.g4 by ANTLR 4.7.1
 import org.antlr.v4.runtime.tree.ParseTreeVisitor;
 
+import AST.Symbol;
+import antlr.t3parserParser.ModuleIdContext;
+
 /**
  * This interface defines a complete generic visitor for a parse tree produced
  * by {@link t3parserParser}.
@@ -12,7 +15,7 @@ import org.antlr.v4.runtime.tree.ParseTreeVisitor;
 public interface t3parserVisitor<T> extends ParseTreeVisitor<T> {
 	/**
 	 * Visit a parse tree produced by {@link t3parserParser#ttcn3module}.
-	 * @param ctx the parse tree
+	 * @param moduleIdContext the parse tree
 	 * @return the visitor result
 	 */
 	T visitTtcn3module(t3parserParser.Ttcn3moduleContext ctx);
