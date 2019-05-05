@@ -45,9 +45,40 @@ Testing and Test Control Notation version 3 (TTCN-3) is a strongly typed testing
 
 #### 3. ANTLR
 
-### Symbol table
+### Semantic analysis
 
-#### 1. Data structure
+After lexical analysis and syntax analysis, the parser tree has been built. It seems like the compiler is ready for the translation. While, we should make sure the symbols of the program are used correctly. In this case, what we need is a  semantic analyzer. The semantic analysis phase of a compiler connects variable definitions to their uses, checks that each expression has a correct type. The key to implementing this phase is an appropriate data structure called a **symbol table**. Our application will store symbols in the symbol table and then check identifier references for correctness by looking them up in the symbol table. 
+
+#### 1. Symbol table
+
+Symbol table is data structure that used by compiler to hold information about sourse program constructions. The language being implemented dictates a symbol table’s structure and complexity. TTCN-3 allows the same identifier to mean different things in different contexts. Thus, the symbol table groups symbols into *scopes*. A scope is just a set of symbols such as a list of parameters for a function or the list of variables and functions in a global scope. 
+
+In this project, we use the scope tree and hash map to realize the data structure of the symbol table. Scope tree show the relationship between the scopes of a program and each scope holds the symbols which are defined in the corresponding  scope. Hash map is used to store the symbols because it can offer the efficient insert and read ability.
+
+As for the scope node, there are different scope class for different scope node. All the scope nodes should implement the `Scope` interface, which offers the following methods:
+
+- `public String getScopeName();`
+
+`getScopeName ` method is used to return the name of the scope. The return type is `String` .
+
+- `public Scope getEnclosingScope();`
+
+`getEnclosingScope` method is used to get enclosing scope, which can support the `pop` method of the scope stack. The method will return a `Scope` type.
+
+- `public void define(Symbol sym);`
+
+`define` method is used to define a symbol into the current scope. The argument is a `Symbol` instance.
+
+- `public Symbol resolve(String name);`
+
+`resolve` method is used to look up name in the current scope or in enclosing scopes. The argument is a `String` type name and the return type is `Symbol` instance.
+
+Apart from that, for each scope node, there is a pointer points to the enclosing scope and there is a hash map to hold the symbols which belong to the scope. At the very beginning of the semantic analysis, we should define a global scope for the `module` , and any other scopes will be defined under the global scope.
+
+Then came the hash map, we use hash map to store the symbols of a scope. Considering the order of some symbol like function parameters and record fields have special meanings, we choose the `Java LinkedHashMap` as the container of those symbols. Because `Java LinkedHashMap ` is a efficient data structure for inserting and reading data, with a predictable iteration. The key-value pair of hash map is `<String, Symbol>` . In this case, we can define and look up for a symbol with its name. Each symbol object has three member variables, they are name, type and scope. `name` tells us the name of the symbol and `scope` shows what scope contains it. `type` comes from a enum type of the `Symbol` class, which represents the type of the symbol. There are two constructed functions, one uses the name and type variables to construct, the other only use the name variable. Besides, `getName` method returns the symbol name and `toString` method return the information of the symbol in detail.
+
+The symbol table by itself is just a repository of symbol definitions—it doesn’t do any checking. To validate code, we need to check the variable and function references in expressions against the rules we set up earlier. There are two fundamental operations for symbol validation: **defining** symbols and **resolving** symbols. Defining a symbol means adding it to a scope. Resolving a symbol means figuring out which definition the symbol refers to. In some sense, resolving a symbol means finding the “closest” matching definition. The closest scope is the closest enclosing scope. For example, let’s look at another Cymbol example that has symbol definitions in different scopes (labeled with circumscribed numbers). 
+
 #### 2. Symbol binder
 
 - VariableSymbol
@@ -69,6 +100,14 @@ A constant assigns a name to a fixed value. A value is assigned only once to a c
 
 When the walker enter the `constDef` node, it will check the following element to determine the next action. If the following element is a predefined type, the `DefPhase` module will bind the predefined type and the constant value name. When it came to the user defined type, the `DefPhase` will figure out what the user defined type means, then bind the primary type with the constant value name.
 
+- Port definition
+
+Port symbol is treated as a `typedef` currently, which will be defined into the current scope. A port name can represent more than one type.
+
+- Component definition
+
+
+
 - Function definition
 
 Function symbol is a sub-class of the symbol, which has the name, type and scope features. Meanwhile the function symbol also represents a scope. It implements the `Scope` interface and realizes all the methods of the `Scope` interface.
@@ -80,6 +119,8 @@ One the other hand, the function symbol also play a role of a scope. It can retu
 Using these features above, the `DefPhase ` module can realize the function definition easily. First of all, when the semantic analyzer finds the function definition node of parser tree, the `DefPhase ` module will collect the function name and function return type. After that a function symbol will be created with the name and return type. Then the function symbol is defined into the current scope and the `currentscope` pointer will point to the function scope. As for the arguments, the `DefPhase ` module will get the arguments list and define each argument into the function scope. Finally the function symbol finishes buiding its environment and then it can handle the function body.
 
 In conclusion, the function symbol is treated as a symbol and can be defined in the current scope so that the function can be called in the program. And it also a scope for its arguments which provide a environment for the body of a function.
+
+- Altstep definition
 
 - Record definition
 
@@ -165,4 +206,40 @@ type record MyRecordType {
 		boolean field3
 }
 ```
+
+A **record** value is assigned on an individual field basis. The order of field values in the value list notation shall be the same as the order of fields in the related type definition. 
+
+```
+// TTCN-3
+const MyRecordType myrecord := {
+		field1 := 1,
+		field2 := "ABC",
+		field2 := true
+}
+```
+
+Elements of a **record** shall be referenced by the dot notation TypeIdOrExpression.ElementId, where
+TypeIdOrExpression resolves to the name of a structured type or an expression of a structured type such as
+variable, formal parameter, module parameter, constant, template, or function invocation. ElementId shall resolve to the name of a field in the structured type. 
+
+```
+// TTCN-3
+var integer r := myrecord.field1;
+```
+
+### Port types, component types and test configurations
+
+#### 1. Port types
+
+
+
+### Functions, altsteps and testcases
+
+#### 1. Functions
+
+#### 2. Altsteps
+
+TTCN-3 uses altsteps to specify default behaviour or to structure the alternatives of an **alt** statement.
+
+Altsteps are scope units similar to functions. The altstep body defines an optional set of local definitions and a set of alternatives, the so-called *top alternatives*, that form the altstep body. The syntax rules of the top alternatives are identical to the syntax rules of the alternatives of **alt** statements. Altsteps may invoke functions and altsteps or activate altsteps as defaults.
 
