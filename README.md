@@ -94,6 +94,8 @@ multiple times in a TTCN-3 module.
 
 A TTCN-3 template variable stores templates. They are declared by the **var template** keyword followed by a type identifier and a variable identifier. An initial content can be assigned at declaration.
 
+Templates are used to either transmit a set of distinct values or to test whether a set of received values matches the template specification. Templates can be defined globally or locally.
+
 - ConstSymbol
 
 A constant assigns a name to a fixed value. A value is assigned only once to a constant, at the place of its declaration. The constant does not change its value during test execution. The constant is defined only once, but can be referenced multiple times in a TTCN-3 module.
@@ -105,6 +107,14 @@ When the walker enter the `constDef` node, it will check the following element t
 Port symbol is treated as a `typedef` currently, which will be defined into the current scope. A port name can represent more than one type.
 
 - Component definition
+
+```
+// TTCN-3
+type component MyComponentType {
+		var integer vc_myIntVar := 0; 
+		port port1 pO1;
+}
+```
 
 
 
@@ -135,7 +145,9 @@ type record MyRecordType {
 
 The record symbol is a symbol that will be defined into the current scope. Meanwhile, the record symbol also plays a role of scope and fields belong to the record will be defined into the record scope. The difference between the function symbol and the record symbol is that the record symbol don't have return type, so the type of record expression is `tVOID`. Apart from that difference, other methods of definition and binding is as same as the function symbol.
 
+- Testcase definition
 
+In TTCN-3, test cases are a special kind of function. 
 
 #### 3. Typing check
 
@@ -243,3 +255,6 @@ TTCN-3 uses altsteps to specify default behaviour or to structure the alternativ
 
 Altsteps are scope units similar to functions. The altstep body defines an optional set of local definitions and a set of alternatives, the so-called *top alternatives*, that form the altstep body. The syntax rules of the top alternatives are identical to the syntax rules of the alternatives of **alt** statements. Altsteps may invoke functions and altsteps or activate altsteps as defaults.
 
+#### 3. Testcases
+
+In TTCN-3, test cases are a special kind of function. Test cases define the behaviours, which have to be executed to check whether the SUT passes a test or not.

@@ -1,7 +1,7 @@
 package AST;
 
 public class Symbol {
-	public static enum Type {tMODULE, tINVALID, tVOID, tINT, tFLOAT, tBOOL, tTIMER, tRECORD,}
+	public static enum Type {tMODULE, tINVALID, tVOID, tINT, tFLOAT, tBOOL, tTIMER, tRECORD, tPORT}
 
     String name;      // All symbols at least have a name
     Type type;
