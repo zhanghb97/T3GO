@@ -132,6 +132,10 @@ In conclusion, the function symbol is treated as a symbol and can be defined in 
 
 - Altstep definition
 
+Altsteps are scope units similar to functions. The altstep body defines an optional set of local definitions and a set of alternatives, the so-called *top alternatives*, that form the altstep body. The syntax rules of the top alternatives are identical to the syntax rules of the alternatives of **alt** statements. 
+
+The behaviour of an altstep can be defined by using the program statements and operations summarized in clause 18. Altsteps may invoke functions and altsteps or activate altsteps as defaults. 
+
 - Record definition
 
 ```TTCN-3
