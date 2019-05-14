@@ -155,6 +155,16 @@ In TTCN-3, test cases are a special kind of function.
 
 #### 3. Typing check
 
+Our phase classes need three fields: a reference to a global scope, a parse tree annotator to track the scopes we create, and a pointer to the current scope.
+
+- parse tree annotator
+
+```java
+ParseTreeProperty<Scope> scopes;
+```
+
+Associate a property with a parse tree node. Useful with parse tree listeners that need to associate values with particular tree nodes, kind of like specifying a return value for the listener event method that visited a particular node. 
+
 ### TTCN-3 scopes
 
 |          TTCN-3          |       Go language       |
